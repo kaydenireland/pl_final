@@ -4,6 +4,7 @@ mod cli;
 mod token;
 mod lexer;
 mod parser;
+mod pratt_parser;
 mod mtree;
 
 fn main() {

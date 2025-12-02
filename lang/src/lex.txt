@@ -1,12 +1,6 @@
 func add(x : i32) -> i32
 [
-    let value : i32 = 35;
-    if true [
-       let a = 5;
-    ] else [
-        let b = 7;
-    ]
-    return value;
+    return /x * y;
 ]
 
 func main()

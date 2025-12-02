@@ -68,6 +68,8 @@ pub enum Token {
     LIT_CHAR { value: char },
     LIT_STRING { value: String },
 
+    ERROR,
+
     // End-of-Input
     EOI,
 
