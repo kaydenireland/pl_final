@@ -1,5 +1,13 @@
 use clap::{Parser, Subcommand};
 
+use std::fs;
+
+use crate::{
+    lexer::Lexer,
+    parser::Parser as lParser
+};
+
+
 #[derive(Parser)]
 #[command(name = "lang", version)]
 pub struct Cli {
@@ -47,9 +55,16 @@ pub fn print(path: String, numbered: bool) {
 }
 
 pub fn tokenize(path: String) {
-    println!("Not Implemented Yet.");
+    let contents = fs::read_to_string(path).unwrap();
+    let mut lexer = Lexer::new(contents);
+    lexer.print_tokens();
 }
 
 pub fn parse(path: String) {
-    println!("Not Implemented Yet.");
+    let lexer = Lexer::new(fs::read_to_string(path).unwrap());
+    let mut parser = lParser::new(lexer);
+    let mtree = parser.analyze();
+
+    println!("\nMTree:");
+    mtree.print();
 }
