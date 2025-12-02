@@ -207,30 +207,6 @@ impl Parser {
         child
     }
 
-    pub fn parse_expression(&mut self) -> MTree {
-        self.indent_print("parse_expression()");
-        self.indent_increment();
-
-        let mut child = MTree::new(Token::EXPR);
-
-        match self.curr() {
-            Token::LIT_INT32 { .. }
-            | Token::LIT_FLT32 { .. }
-            | Token::LIT_CHAR { .. }
-            | Token::LIT_STRING { .. }
-            | Token::ID { .. } => {
-                child._push(MTree::new(self.curr()));
-                self.advance();
-            }
-            _ => {
-                panic!("Unexpected token '{:?}' in expression!", self.curr());
-            }
-        }
-
-        self.indent_decrement();
-
-        child
-    }
 
     pub fn parse_let(&mut self) -> MTree {
         self.indent_print("parse_let()");
@@ -256,7 +232,7 @@ impl Parser {
             }
 
             self.expect(Token::ASSIGN);
-            child._push(self.parse_expression());
+            child._push(self.parse_expr());
             self.expect(Token::SEMICOLON);
         }
         self.indent_decrement();
@@ -272,7 +248,7 @@ impl Parser {
 
         {
             self.expect(Token::IF);
-            child._push(self.parse_expression());
+            child._push(self.parse_expr());
             child._push(self.parse_block_nest());
             if self.accept(Token::ELSE) {
                 child._push(self.parse_block_nest());
@@ -290,7 +266,7 @@ impl Parser {
         let mut child = MTree::new(Token::RTRN_STMT);
         {
             self.expect(Token::RETURN);
-            child._push(self.parse_expression());
+            child._push(self.parse_expr());
             self.expect(Token::SEMICOLON);
         }
         self.indent_decrement();
