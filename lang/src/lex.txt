@@ -1,6 +1,7 @@
 func add(x : i32) -> i32
 [
-    return /x * y;
+    let val: bool = false;
+    return (/x * y) == 5;
 ]
 
 func main()
