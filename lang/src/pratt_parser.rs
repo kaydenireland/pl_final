@@ -48,7 +48,7 @@ impl Token {
             Token::LIT_BOOL { .. } => BindingPower { left: 0, right: 0, unary: 0 },
             Token::LIT_STRING { .. } => BindingPower { left: 0, right: 0, unary: 0 },
 
-            Token::ASSIGN => BindingPower { left: 0, right: 0, unary: 0 },
+            Token::ASSIGN => BindingPower { left: 5, right: 4, unary: 0 },
 
 
             Token::OR => BindingPower { left: 10, right: 11, unary: 0 },

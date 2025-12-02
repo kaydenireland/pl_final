@@ -199,7 +199,10 @@ impl Parser {
                 Token::IF => child = self.parse_if(),
                 Token::RETURN => child = self.parse_return(),
                 Token::BRACKET_L => child = self.parse_block_nest(),
-                _ => panic!("Unexpected token '{:?}' in statement!", self.curr()),
+                _ => {
+                    child = self.parse_expr();
+                    self.expect(Token::SEMICOLON);
+                },
             }
         }
         self.indent_decrement();
@@ -231,8 +234,11 @@ impl Parser {
                 }
             }
 
-            self.expect(Token::ASSIGN);
-            child._push(self.parse_expr());
+            if !self.peek(Token::SEMICOLON){
+                self.expect(Token::ASSIGN);
+                child._push(self.parse_expr());
+            }
+            
             self.expect(Token::SEMICOLON);
         }
         self.indent_decrement();
