@@ -409,6 +409,9 @@ impl Lexer {
             "i32" => Token::TYPE_INT32,
             "f32" => Token::TYPE_FLT32,
             "char" => Token::TYPE_CHAR,
+            "bool" => Token::TYPE_BOOL,
+            "true" => Token::LIT_BOOL { value: true },
+            "false" => Token::LIT_BOOL { value: false },
             _ => {
                 if string.contains('.') {
                     let value = string.parse::<f32>().unwrap();

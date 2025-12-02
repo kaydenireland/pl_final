@@ -31,6 +31,7 @@ impl Token {
             Token::LIT_INT32 { .. }
             | Token::LIT_FLT32 { .. }
             | Token::LIT_CHAR { .. }
+            | Token::LIT_BOOL { .. }
             | Token::LIT_STRING { .. } => true,
             _ => false
         }
@@ -44,6 +45,7 @@ impl Token {
             Token::LIT_CHAR { .. } => BindingPower { left: 0, right: 0, unary: 0 },
             Token::LIT_INT32 { .. } => BindingPower { left: 0, right: 0, unary: 0 },
             Token::LIT_FLT32 { .. } => BindingPower { left: 0, right: 0, unary: 0 },
+            Token::LIT_BOOL { .. } => BindingPower { left: 0, right: 0, unary: 0 },
             Token::LIT_STRING { .. } => BindingPower { left: 0, right: 0, unary: 0 },
 
             Token::ASSIGN => BindingPower { left: 0, right: 0, unary: 0 },
@@ -62,7 +64,8 @@ impl Token {
 
             Token::ADD =>  BindingPower { left: 30, right: 31, unary: 0 },
             Token::SUB =>  BindingPower { left: 30, right: 31, unary: 100 }, 
-            Token::MUL =>  BindingPower { left: 31, right: 32, unary: 0 },           Token::DIV =>  BindingPower { left: 31, right: 32, unary: 100 },
+            Token::MUL =>  BindingPower { left: 31, right: 32, unary: 0 },           
+            Token::DIV =>  BindingPower { left: 31, right: 32, unary: 100 },
 
 
             Token::PARENS_L => BindingPower { left: 0, right: 0, unary: 0 },
