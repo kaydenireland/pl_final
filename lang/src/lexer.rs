@@ -21,6 +21,10 @@ pub enum LexerState {
     Equal,
     Greater,
     Less,
+
+    COMMENT,
+    BLOCK_COMMENT,
+    BLOCK_COMMENT2,
 }
 
 pub struct Lexer {
@@ -361,16 +365,30 @@ impl Lexer {
                     }
                 },
                 LexerState::Slash => match current_char {
-                    '/' => {
-                        // Comments
-                        self.state = LexerState::Start;
-                    }
+                    '/' => self.state = LexerState::COMMENT,
+                    '*' => self.state = LexerState::BLOCK_COMMENT,
 
                     _ => {
                         self.state = LexerState::Start;
                         self.current_token = Token::DIV;
                         self.position -= 1;
                         break;
+                    }
+                },
+                LexerState::COMMENT => {
+                    if current_char == '\n' {
+                        self.state = LexerState::Start;
+                    }
+                },
+                LexerState::BLOCK_COMMENT => {
+                    if current_char == '*' {
+                        self.state = LexerState::BLOCK_COMMENT2
+                    }
+                },
+                LexerState::BLOCK_COMMENT2 => {
+                    match current_char {
+                        '/' => self.state = LexerState::Start,
+                        _ => self.state = LexerState::BLOCK_COMMENT,
                     }
                 },
 
@@ -410,6 +428,7 @@ impl Lexer {
             "f32" => Token::TYPE_FLT32,
             "char" => Token::TYPE_CHAR,
             "bool" => Token::TYPE_BOOL,
+            "string" => Token::TYPE_STRING,
             "true" => Token::LIT_BOOL { value: true },
             "false" => Token::LIT_BOOL { value: false },
             _ => {

@@ -62,6 +62,7 @@ pub enum Token {
     TYPE_FLT32,
     TYPE_CHAR,
     TYPE_BOOL,
+    TYPE_STRING,
 
     // Literals
     LIT_INT32 { value: i32 },
@@ -125,6 +126,6 @@ impl Token {
 
 impl Token {
     pub fn is_type(&self) -> bool {
-        matches!(self, Token::TYPE_INT32 | Token::TYPE_FLT32 | Token::TYPE_CHAR | Token::TYPE_BOOL)
+        matches!(self, Token::TYPE_INT32 | Token::TYPE_FLT32 | Token::TYPE_CHAR | Token::TYPE_BOOL | Token::TYPE_STRING)
     }
 }
