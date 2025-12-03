@@ -9,4 +9,6 @@ func main()
     let sum : i32;
     sum = 5 + 6;
     return sum;
+
+    let s: string = "Hello";
 ]

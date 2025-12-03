@@ -410,6 +410,7 @@ impl Lexer {
             "f32" => Token::TYPE_FLT32,
             "char" => Token::TYPE_CHAR,
             "bool" => Token::TYPE_BOOL,
+            "string" => Token::TYPE_STRING,
             "true" => Token::LIT_BOOL { value: true },
             "false" => Token::LIT_BOOL { value: false },
             _ => {
