@@ -1,0 +1,12 @@
+func add(x : i32) -> i32
+[
+    let val: bool = false;
+    return (/x * y) == 5;
+]
+
+func main()
+[
+    let sum : i32;
+    sum = 5 + 6;
+    return sum;
+]
