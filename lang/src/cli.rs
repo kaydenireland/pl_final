@@ -88,7 +88,7 @@ pub fn analyze(path: String) { // semantic analysis
                     for (i, error) in errors.iter().enumerate() {
                         println!("  {}. {}", i + 1, error);
                     }
-        }
+                }
             }
         }
         Err(e) => {
