@@ -94,6 +94,7 @@ impl Lexer {
 
             match self.state {
                 LexerState::Start => match current_char {
+                    ' ' | '\t' | '\r' | '\n' => continue,
                     'A'..='Z' | 'a'..='z' | '_' => {
                         self.state = LexerState::Chars;
                         self.buffer_string.push(current_char);
