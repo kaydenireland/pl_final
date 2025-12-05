@@ -1,0 +1,61 @@
+Start Symbol
+<program> ::= { <func_decl> } ;
+
+Functions
+// Function declaration with optional parameters and return type
+
+<func_decl> ::= "func" <id> "(" [ <params> ] ")" [ "->" <type> ] <block> ;
+<params> ::= <param> { "," <param> } ;
+<param> ::= <id> ":" <type> ;
+
+Types
+<type> ::= "i32" | "f32" | "char" | "bool" ;
+
+Statements and Blocks
+
+<block> ::= "[" { <stmt> } "]" ;
+<stmt> ::= <let_stmt>
+         | <if_stmt>
+         | <while_stmt>
+         | <return_stmt>
+         | <print_stmt>
+         | <expr_stmt> ;
+<let_stmt> ::= "let" <id> [ ":" <type> ] [ "=" <expr> ] ";" ;
+<if_stmt> ::= "if" <expr> <block> [ "else" <block> ] ;
+<while_stmt> ::= "while" <expr> <block> ;
+<return_stmt> ::= "return" <expr> ";" ;
+<print_stmt> ::= "print" <expr> ";" ;
+<expr_stmt> ::= <expr> ";" ;
+
+Expressions (Precedence via Pratt Parser)
+// Expression hierarchy ordered by precedence
+
+<expr> ::= <assign> ;
+<assign> ::= <or_expr> | <id> "=" <assign> ;
+<or_expr> ::= <and_expr> { "||" <and_expr> } ;
+<and_expr> ::= <eq_expr> { "&&" <eq_expr> } ;
+<eq_expr> ::= <rel_expr> { ( "==" | "!=" ) <rel_expr> } ;
+<rel_expr> ::= <add_expr> { ( "<" | ">" | "<=" | ">=" ) <add_expr> } ;
+<add_expr> ::= <mul_expr> { ( "+" | "-" ) <mul_expr> } ;
+<mul_expr> ::= <unary> { ( "*" | "/" ) <unary> } ;
+<unary> ::= <primary> | ( "!" | "-" ) <unary> ;
+<primary> ::= <id> | <literal> | <call> | "(" <expr> ")" ;
+<call> ::= <id> "(" [ <args> ] ")" ;
+<args> ::= <expr> { "," <expr> } ;
+
+Lexical Elements
+
+<id> ::= ( letter | "_" ) { letter | digit | "_" | "-" } ;
+<literal> ::= <int> | <float> | <char> | <bool> | <string> ;
+<int> ::= digit { digit } ;
+<float> ::= digit { digit } "." digit { digit } ;
+<char> ::= "'" character "'" ;
+<bool> ::= "true" | "false" ;
+<string> ::= '"' { character } '"' ;
+letter ::= "a".."z" | "A".."Z" ;
+digit ::= "0".."9" ;
+
+Comments and Whitespace
+
+<comment> ::= "//" { character } ;
+<ws> ::= { ' ' | '\t' | '\n' | '\r' } ;
