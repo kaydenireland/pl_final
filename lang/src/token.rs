@@ -82,6 +82,7 @@ pub enum Token {
     PARAM_LIST,
     PARAM,
     BLOCK,
+    WHILE_STMT,
     IF_STMT,
     LET_STMT,
     RTRN_STMT,

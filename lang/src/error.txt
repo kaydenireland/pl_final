@@ -1,0 +1,69 @@
+// test TPL cases: let, assign, return, if, while, arithmetic, bools, funcs
+
+func factorial_recursion(n: i32) -> i32
+[
+    if n < 2 [
+        return 1;
+    ] else [
+        return n * factorial_recursion(n - 1);
+    ]
+]
+
+func factorial_loop(n: i32) -> i32
+[
+    let p: i32 = n;
+    while n > 0 [
+        n = n - 1;
+        p = p * n;
+    ]
+    return p;
+]
+
+func main() -> i32
+[
+    let n: i32 = 5;
+    let result1: i32;
+    let result2: i32;
+    let result3: i32;
+    let bad_assign: i32 = true; // intentional type error: bool -> i32
+
+    // assignment + arithmetic
+    result1 = factorial_loop(n);
+    result2 = factorial_recursion(n);
+
+    // booleans + relations
+    let check: bool = (result1 == result2);
+    if check [
+        print 1; // prints 1 for true
+    ] else [
+        print 0; // prints 0 for false
+    ]
+
+    // call an unknown function
+    result3 = unknown_func();
+
+    // wrong arity
+    result1 = factorial_recursion();
+
+    // wrong arg type
+    result2 = factorial_loop(true);
+
+    // undeclared var
+    z = 10;
+
+    return result1;
+]
+
+
+// duplicate function name to trigger a warning
+func factorial_loop(n: i32) -> i32
+[
+    return 0;
+]
+
+// declares return type but missing a return
+func bad_ret(n: i32) -> i32
+[
+    let a: i32 = n;
+]
+

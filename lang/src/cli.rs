@@ -3,8 +3,7 @@ use clap::{Parser, Subcommand};
 use std::fs;
 
 use crate::{
-    lexer::Lexer,
-    parser::Parser as lParser
+    lexer::Lexer, mtree::MTree as PTree, parser::Parser as lParser, semantic::{MTree as STree, SymbolTable, from_parse_tree, analyze as tree_analyze}
 };
 
 
@@ -28,6 +27,9 @@ pub enum Command {
     Parse {
         filepath: String,
     },
+    Analyze {
+        filepath: String,
+    },
 }
 
 pub fn handle(cli: Cli) {
@@ -35,6 +37,7 @@ pub fn handle(cli: Cli) {
         Command::Print { filepath, numbered } => print(filepath, numbered),
         Command::Tokenize { filepath } => tokenize(filepath),
         Command::Parse { filepath } => parse(filepath),
+        Command::Analyze { filepath } => analyze(filepath),
     }
 }
 
@@ -67,4 +70,31 @@ pub fn parse(path: String) {
 
     println!("\nMTree:");
     mtree.print();
+}
+
+pub fn analyze(path: String) { // semantic analysis
+    let lexer = Lexer::new(fs::read_to_string(path).unwrap());
+    let mut parser = lParser::new(lexer);
+    let mtree: PTree = parser.analyze();
+    match from_parse_tree(&mtree) {
+        Ok(ast) => {
+            println!("\n=== Semantic AST ===\n{:#?}", ast);
+            let mut symbol_table = SymbolTable::new();
+
+            match tree_analyze(&ast, &mut symbol_table) {
+                Ok(_) => println!("\n✓ Semantic analysis completed with 0 error(s)."),
+                Err(errors) => {
+                    println!("\n✓ Semantic analysis completed with {} error(s):", errors.len());
+                    for (i, error) in errors.iter().enumerate() {
+                        println!("  {}. {}", i + 1, error);
+                    }
+                }
+            }
+        }
+        Err(e) => {
+            panic!("Semantic conversion failed: {}", e);
+        }
+    }
+
+    
 }

@@ -197,6 +197,8 @@ impl Parser {
             match self.curr() {
                 Token::LET => child = self.parse_let(),
                 Token::IF => child = self.parse_if(),
+                Token::WHILE => child = self.parse_while(),
+                Token::PRINT => child = self.parse_print(),
                 Token::RETURN => child = self.parse_return(),
                 Token::BRACKET_L => child = self.parse_block_nest(),
                 _ => {
@@ -259,6 +261,38 @@ impl Parser {
             if self.accept(Token::ELSE) {
                 child._push(self.parse_block_nest());
             }
+        }
+        self.indent_decrement();
+
+        child
+    }
+
+    pub fn parse_while(&mut self) -> MTree {
+        self.indent_print("parse_while()");
+        self.indent_increment();
+
+        let mut child = MTree::new(Token::WHILE_STMT);
+
+        {
+            self.expect(Token::WHILE);
+            child._push(self.parse_expr());
+            child._push(self.parse_block_nest());
+        }
+        self.indent_decrement();
+
+        child
+    }
+
+    pub fn parse_print(&mut self) -> MTree {
+        self.indent_print("parse_print()");
+        self.indent_increment();
+
+        let mut child = MTree::new(Token::PRINT);
+
+        {
+            self.expect(Token::PRINT);
+            child._push(self.parse_expr());
+            self.expect(Token::SEMICOLON);
         }
         self.indent_decrement();
 
