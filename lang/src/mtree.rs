@@ -1,6 +1,7 @@
 use crate::token::Token;
 use std::rc::Rc;
 
+#[derive(Debug)]
 pub struct MTree {
     pub token: Token,
     pub children: Vec<Rc<MTree>>,
@@ -35,3 +36,4 @@ impl MTree {
         self.print_recursively(0);
     }
 }
+
