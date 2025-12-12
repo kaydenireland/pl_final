@@ -1,0 +1,36 @@
+// Execution Test
+
+func add(a: i32, b: i32) -> i32 [
+    return a + b;
+]
+
+func factorial(n: i32) -> i32 [
+    if n < 2 [
+        return 1;
+    ] else [
+        return n * factorial(n - 1);
+    ]
+]
+
+func main() -> i32 [
+    let x: i32 = 5;
+    let y: i32 = 3;
+
+    print x;
+    print y;
+
+    let sum: i32 = add(x, y);
+    print sum;
+
+    let fact: i32 = factorial(x);
+    print fact;
+
+    let check: bool = (sum == 8);
+    if check [
+        print 1;
+    ] else [
+        print 0;
+    ]
+
+    return 0;
+]

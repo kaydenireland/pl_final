@@ -1,6 +1,7 @@
 use crate::lexer::Lexer;
-use crate::mtree::MTree;
 use crate::token::Token;
+use crate::mtree::MTree;
+
 
 const INDENT: usize = 2;
 
@@ -81,7 +82,7 @@ impl Parser {
 }
 
 impl Parser {
-    // simple recursive descend parser
+    // recursive descend parser
 
     pub fn parse(&mut self) -> MTree {
         let mut tree = MTree::new(Token::START);
@@ -198,7 +199,7 @@ impl Parser {
                 Token::LET => child = self.parse_let(),
                 Token::IF => child = self.parse_if(),
                 Token::WHILE => child = self.parse_while(),
-                Token::PRINT => child = self.parse_print(),
+                Token::PRINT => child = self.parse_print(),  // <-- ADDED THIS LINE
                 Token::RETURN => child = self.parse_return(),
                 Token::BRACKET_L => child = self.parse_block_nest(),
                 _ => {

@@ -17,14 +17,11 @@ pub enum LexerState {
 
     Dash,
     Slash,
+    Comment,
 
     Equal,
     Greater,
     Less,
-
-    COMMENT,
-    BLOCK_COMMENT,
-    BLOCK_COMMENT2,
 }
 
 pub struct Lexer {
@@ -88,13 +85,10 @@ impl Lexer {
             }
 
             let current_char = self.input_string.chars().nth(self.position).unwrap();
-            //print!("{}", current_char);
-
             self.position += 1;
 
             match self.state {
                 LexerState::Start => match current_char {
-                    ' ' | '\t' | '\r' | '\n' => continue,
                     'A'..='Z' | 'a'..='z' | '_' => {
                         self.state = LexerState::Chars;
                         self.buffer_string.push(current_char);
@@ -186,7 +180,7 @@ impl Lexer {
                 },
 
                 LexerState::Chars => match current_char {
-                    'A'..'Z' | '_' | 'a'..'z' | '-' | '0'..'9' => {
+                    'A'..='Z' | '_' | 'a'..='z' | '-' | '0'..='9' => {
                         self.buffer_string.push(current_char);
                     }
 
@@ -366,8 +360,10 @@ impl Lexer {
                     }
                 },
                 LexerState::Slash => match current_char {
-                    '/' => self.state = LexerState::COMMENT,
-                    '*' => self.state = LexerState::BLOCK_COMMENT,
+                    '/' => {
+                        // Comments - skip until end of line
+                        self.state = LexerState::Comment;
+                    }
 
                     _ => {
                         self.state = LexerState::Start;
@@ -376,20 +372,13 @@ impl Lexer {
                         break;
                     }
                 },
-                LexerState::COMMENT => {
-                    if current_char == '\n' {
+                LexerState::Comment => match current_char {
+                    '\n' | '\r' => {
+                        // End of comment, return to start
                         self.state = LexerState::Start;
                     }
-                },
-                LexerState::BLOCK_COMMENT => {
-                    if current_char == '*' {
-                        self.state = LexerState::BLOCK_COMMENT2
-                    }
-                },
-                LexerState::BLOCK_COMMENT2 => {
-                    match current_char {
-                        '/' => self.state = LexerState::Start,
-                        _ => self.state = LexerState::BLOCK_COMMENT,
+                    _ => {
+                        // Continue skipping comment characters
                     }
                 },
 
@@ -429,7 +418,6 @@ impl Lexer {
             "f32" => Token::TYPE_FLT32,
             "char" => Token::TYPE_CHAR,
             "bool" => Token::TYPE_BOOL,
-            "string" => Token::TYPE_STRING,
             "true" => Token::LIT_BOOL { value: true },
             "false" => Token::LIT_BOOL { value: false },
             _ => {
